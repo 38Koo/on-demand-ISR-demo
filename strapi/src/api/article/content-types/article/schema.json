@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ArticleID": {
+      "type": "integer"
+    },
+    "ArticleName": {
+      "type": "string"
+    },
+    "Content": {
+      "type": "text"
+    }
+  }
+}
