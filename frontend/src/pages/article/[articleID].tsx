@@ -1,10 +1,10 @@
 import { Box, Divider, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { useRouter } from "next/router";
 
 export type Article = {
   id: number;
   attributes: {
-    ArticleID: number;
     ArticleName: string;
     Content: string;
   };
@@ -19,7 +19,11 @@ type PathParams = {
 };
 
 export default function Article({ article }: PageProps) {
-  console.log(article);
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <></>;
+  }
 
   return (
     <Box p="3rem">
