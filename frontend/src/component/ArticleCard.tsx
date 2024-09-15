@@ -1,5 +1,5 @@
 import { Box, Heading, Link } from "@chakra-ui/react";
-import { Article } from "../pages";
+import { Article } from "../pages/article/[articleID]";
 
 export const ArticleCard = ({ id, attributes }: Article) => {
   return (

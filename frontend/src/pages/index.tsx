@@ -1,15 +1,7 @@
 import { Box, Heading, Stack } from "@chakra-ui/react";
 import { GetServerSideProps, NextPage } from "next";
 import { ArticleCard } from "../component/ArticleCard";
-
-export type Article = {
-  id: number;
-  attributes: {
-    ArticleID: number;
-    ArticleName: string;
-    Content: string;
-  };
-};
+import { Article } from "./article/[articleID]";
 
 type PageProps = {
   data: Article[];
