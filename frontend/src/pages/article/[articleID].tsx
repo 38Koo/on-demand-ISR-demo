@@ -11,7 +11,7 @@ export type Article = {
 };
 
 type PageProps = {
-  article: { data: Article };
+  article: { data: Article | null };
   previewMode: boolean;
 };
 
@@ -23,6 +23,10 @@ export default function Article({ article, previewMode }: PageProps) {
   const router = useRouter();
 
   if (router.isFallback) {
+    return <></>;
+  }
+
+  if (!article.data) {
     return <></>;
   }
 
@@ -98,6 +102,11 @@ export const getStaticProps: GetStaticProps<PageProps, PathParams> = async (
 
   const res = await fetch(fetchURL);
   const article = await res.json();
+
+  const isPublished = article.data.publishedAt ? true : false;
+  if (!isPublished && !previewMode) {
+    return { props: { article: { data: null }, previewMode } };
+  }
 
   return { props: { article, previewMode } };
 };
