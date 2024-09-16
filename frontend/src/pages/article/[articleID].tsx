@@ -1,6 +1,6 @@
 import { Box, Divider, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 
 export type Article = {
   id: number;
@@ -12,21 +12,36 @@ export type Article = {
 
 type PageProps = {
   article: { data: Article };
+  previewMode: boolean;
 };
 
 type PathParams = {
   articleID: string;
 };
 
-export default function Article({ article }: PageProps) {
+export default function Article({ article, previewMode }: PageProps) {
   const router = useRouter();
 
   if (router.isFallback) {
     return <></>;
   }
 
+  console.log("Article", article);
+
   return (
     <Box p="3rem">
+      {previewMode && (
+        <Box>
+          <Box as="span">You are currently viewing in Preview Mode. </Box>
+          <Link
+            role="button"
+            className="text-primary"
+            onClick={() => exitPreviewMode()}
+          >
+            Turn Off Preview Mode
+          </Link>
+        </Box>
+      )}
       <Stack spacing="2rem">
         <Box
           height="80vh"
@@ -70,13 +85,26 @@ export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
   return { paths, fallback: true };
 };
 
-export const getStaticProps: GetStaticProps<PageProps, PathParams> = async ({
-  params,
-}) => {
-  const res = await fetch(
-    `http://localhost:1337/api/articles/${params?.articleID}`
-  );
+export const getStaticProps: GetStaticProps<PageProps, PathParams> = async (
+  context
+) => {
+  console.log("121289347128374123741273498172394719283749");
+
+  const previewMode = context.preview ? true : false;
+
+  const fetchURL = `http://localhost:1337/api/articles/${
+    context.params?.articleID
+  }${previewMode ? "?publicationState=preview" : ""}`;
+
+  const res = await fetch(fetchURL);
   const article = await res.json();
 
-  return { props: { article: article } };
+  return { props: { article, previewMode } };
 };
+
+async function exitPreviewMode() {
+  const response = await fetch("/api/exit-preview");
+  if (response) {
+    Router.reload();
+  }
+}
